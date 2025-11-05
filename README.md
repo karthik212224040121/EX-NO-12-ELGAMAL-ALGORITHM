@@ -24,9 +24,69 @@ To Implement ELGAMAL ALGORITHM
 6. Security: The security of the ElGamal algorithm relies on the difficulty of solving the discrete logarithm problem in a large prime field, making it secure for encryption.
 
 ## Program:
+```
+#include <stdio.h>
+#include <stdlib.h>
 
+// Function to calculate (base^exp) % mod using modular exponentiation
+int modular_exponentiation(int base, int exp, int mod)
+{
+    int result = 1;
+    base = base % mod;
+    while (exp > 0)
+    {
+        if (exp % 2 == 1)
+        {
+            result = (result * base) % mod;
+        }
+        exp = exp >> 1;
+        base = (base * base) % mod;
+    }
+    return result;
+}
+
+int main()
+{
+    int p, g, x, k, M; // p is prime, g is primitive root, x is private key, k is random int
+    int y, C1, C2, decrypted_message;
+
+    // Input the parameters 
+    printf("Enter a prime number p: ");
+    scanf("%d", &p);
+    
+    printf("Enter a primitive root g of p: ");
+    scanf("%d", &g);
+    
+    printf("Enter the private key x: ");
+    scanf("%d", &x);
+
+    // Generate public key y = g^x mod p
+    y = modular_exponentiation(g, x, p);
+    printf("Public key y: %d\n", y);
+
+    // Encryption
+    printf("Enter the message (integer) to encrypt: ");
+    scanf("%d", &M);
+    
+    printf("Enter a random integer k: ");
+    scanf("%d", &k);
+
+    // Calculate C1 = g^k mod p and C2 = (M * y^k) mod p
+    C1 = modular_exponentiation(g, k, p);
+    C2 = (M * modular_exponentiation(y, k, p)) % p;
+    printf("Encrypted message: (C1, C2) = (%d,%d)\n", C1, C2);
+
+    // Decryption
+    // Decryption formula: M = C2 * (C1^(p-1-x)) mod p
+    decrypted_message = (C2 * modular_exponentiation(C1, p - 1 - x, p)) % p;
+    printf("Decrypted message: %d\n", decrypted_message);
+    
+    return 0;
+}
+```
 
 ## Output:
+<img width="1658" height="792" alt="image" src="https://github.com/user-attachments/assets/f4df4caa-ef73-4ff9-9f89-bf0263e16f8e" />
 
 
 ## Result:
